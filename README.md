@@ -122,7 +122,3 @@ The image is pinned to `mcr.microsoft.com/playwright:v1.61.1-jammy` to match the
 - **JSONPlaceholder doesn't validate payloads at all** — every endpoint accepts arbitrary bodies. Negative tests therefore target genuinely-reliable failure modes instead (404s on nonexistent resources) rather than payload validation, since there is no real validation to exercise.
 - **SauceDemo special users** (`locked_out_user`, `problem_user`, `error_user`, `performance_glitch_user`, `visual_user`) are used only in the specific negative-scenario tests that need their deliberately broken behavior — never as the default account for happy-path or accessibility assertions.
 - Accessibility assertions target `serious`/`critical` axe-core violations on WCAG 2 A/AA rules; any confirmed false positive would be excluded by rule ID with an inline comment explaining why, rather than a blanket `disableRules`.
-
-## License
-
-ISC
