@@ -75,24 +75,21 @@ Run a single spec: `npx playwright test tests/ui/auth/login.spec.ts`
 
 ## Reports & debugging
 
-Both report types are static sites that fetch their data via AJAX — opening their `index.html` directly (`file://...`) fails with CORS/API errors in the browser, so they must be served locally instead. Every command below does that for you automatically.
-
-- **HTML report:** `npm run report` (opens the last run's Playwright HTML report — includes failure screenshots, videos, and trace links)
+- **HTML report:** `npm run report` (opens the last run's Playwright HTML report — includes failure screenshots, videos, and trace links). This is a static site that fetches its data via AJAX, so opening its `index.html` directly (`file://...`) fails with CORS errors — `show-report` serves it locally instead.
 - **Trace viewer:** `npx playwright show-trace <path-to-trace.zip>` (traces are captured on first retry, and always in CI)
 - **Allure report:** requires a local JDK.
   ```bash
-  npm run allure:generate   # builds allure-report/ from allure-results/
-  npm run allure:open       # serves it locally (do NOT open allure-report/index.html directly)
+  npm run allure:generate   # builds allure-report/index.html from allure-results/
+  npm run allure:open       # optional — serves it locally
   ```
+  `allure:generate` runs with `--single-file`, so `allure-report/index.html` is one self-contained file with all data inlined — it can be opened directly by double-clicking, emailing, or dragging into any browser, no server or `allure:open` step required.
 
 ### Viewing a report downloaded from a CI run
 
-After downloading and unzipping a `combined-*` artifact from the Actions run summary (see below), serve it the same way rather than double-clicking `index.html`:
+After downloading and unzipping a `combined-*` artifact from the Actions run summary (see below):
 
-```bash
-npx playwright show-report <path-to-unzipped-combined-playwright-html-report>
-npx allure open <path-to-unzipped-combined-allure-html-report>
-```
+- `combined-allure-html-report` — just open `index.html` directly, it's fully self-contained.
+- `combined-playwright-html-report` — needs to be served, since Playwright's HTML report isn't single-file: `npx playwright show-report <path-to-unzipped-folder>`.
 
 ## CI/CD
 
