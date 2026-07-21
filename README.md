@@ -87,8 +87,8 @@ Run a single spec: `npx playwright test tests/ui/auth/login.spec.ts`
 
 `.github/workflows/playwright.yml` runs on every push/PR to `main`, `master`, and `stage`:
 
-1. A matrix job runs each of the 8 Playwright projects in parallel, uploading its blob report + Allure results as artifacts.
-2. A `merge-reports` job downloads all shards, merges them into a single Playwright HTML report (`playwright merge-reports`) and a single Allure report (Java installed via `actions/setup-java`), then uploads both as final workflow artifacts — download them from the Actions run summary page.
+1. A matrix job runs each of the 8 Playwright projects in parallel, uploading its raw blob report + Allure results as `raw-blob-report-<project>` / `raw-allure-results-<project>` artifacts (per-project, not directly browsable).
+2. A `merge-reports` job downloads all of those shards and merges them into two final, browsable artifacts covering the whole run: `combined-playwright-html-report` (via `playwright merge-reports`) and `combined-allure-html-report` (Java installed via `actions/setup-java`, then `npm run allure:generate`) — download either from the Actions run summary page, unzip, and open `index.html`.
 
 ## Docker
 

@@ -45,14 +45,14 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: blob-report-${{ env.ARTIFACT_SAFE_NAME }}
+          name: raw-blob-report-${{ env.ARTIFACT_SAFE_NAME }}
           path: blob-report/
           retention-days: 7
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: allure-results-${{ env.ARTIFACT_SAFE_NAME }}
+          name: raw-allure-results-${{ env.ARTIFACT_SAFE_NAME }}
           path: allure-results/
           retention-days: 7
 
@@ -74,7 +74,7 @@ jobs:
       - name: Download blob reports
         uses: actions/download-artifact@v4
         with:
-          pattern: blob-report-*
+          pattern: raw-blob-report-*
           path: all-blob-reports
           merge-multiple: true
 
@@ -84,7 +84,7 @@ jobs:
       - name: Download Allure results
         uses: actions/download-artifact@v4
         with:
-          pattern: allure-results-*
+          pattern: raw-allure-results-*
           path: allure-results
           merge-multiple: true
 
@@ -99,13 +99,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: combined-playwright-html-report
           path: playwright-report/
           retention-days: 30
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: allure-report
+          name: combined-allure-html-report
           path: allure-report/
           retention-days: 30
