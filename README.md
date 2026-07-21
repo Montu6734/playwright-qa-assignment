@@ -75,20 +75,31 @@ Run a single spec: `npx playwright test tests/ui/auth/login.spec.ts`
 
 ## Reports & debugging
 
+Both report types are static sites that fetch their data via AJAX — opening their `index.html` directly (`file://...`) fails with CORS/API errors in the browser, so they must be served locally instead. Every command below does that for you automatically.
+
 - **HTML report:** `npm run report` (opens the last run's Playwright HTML report — includes failure screenshots, videos, and trace links)
 - **Trace viewer:** `npx playwright show-trace <path-to-trace.zip>` (traces are captured on first retry, and always in CI)
 - **Allure report:** requires a local JDK.
   ```bash
   npm run allure:generate   # builds allure-report/ from allure-results/
-  npm run allure:open       # serves it locally
+  npm run allure:open       # serves it locally (do NOT open allure-report/index.html directly)
   ```
+
+### Viewing a report downloaded from a CI run
+
+After downloading and unzipping a `combined-*` artifact from the Actions run summary (see below), serve it the same way rather than double-clicking `index.html`:
+
+```bash
+npx playwright show-report <path-to-unzipped-combined-playwright-html-report>
+npx allure open <path-to-unzipped-combined-allure-html-report>
+```
 
 ## CI/CD
 
 `.github/workflows/playwright.yml` runs on every push/PR to `main`, `master`, and `stage`:
 
 1. A matrix job runs each of the 8 Playwright projects in parallel, uploading its raw blob report + Allure results as `raw-blob-report-<project>` / `raw-allure-results-<project>` artifacts (per-project, not directly browsable).
-2. A `merge-reports` job downloads all of those shards and merges them into two final, browsable artifacts covering the whole run: `combined-playwright-html-report` (via `playwright merge-reports`) and `combined-allure-html-report` (Java installed via `actions/setup-java`, then `npm run allure:generate`) — download either from the Actions run summary page, unzip, and open `index.html`.
+2. A `merge-reports` job downloads all of those shards and merges them into two final artifacts covering the whole run: `combined-playwright-html-report` (via `playwright merge-reports`) and `combined-allure-html-report` (Java installed via `actions/setup-java`, then `npm run allure:generate`) — download either from the Actions run summary page and view it with the commands above.
 
 ## Docker
 
