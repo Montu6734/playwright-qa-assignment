@@ -30,7 +30,15 @@ test.describe('Performance & Network Monitoring', () => {
     await loginPage.login('standard_user', config.defaultPassword);
     await expect(page).toHaveURL(/inventory\.html/);
 
-    expect(getConsoleErrors()).toEqual([]);
+    // "Failed to load resource" entries are the browser's own network log for a
+    // failed background request (fonts/analytics/etc. the page pulls from third
+    // parties we don't control), not an application error — and shared CI IP
+    // ranges get rate-limited/blocked by such third parties far more often than
+    // a residential IP. Failed-request detection itself is already covered
+    // deterministically by the test above; this assertion is scoped to genuine
+    // app-level console errors only.
+    const appErrors = getConsoleErrors().filter((message) => !/^Failed to load resource:/.test(message));
+    expect(appErrors).toEqual([]);
   });
 
   test('tracks page load / navigation performance metrics', async ({ page }) => {
